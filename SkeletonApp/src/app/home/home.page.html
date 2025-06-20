@@ -1,20 +1,49 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+  <ion-toolbar style="text-align:left">
+    <h1>SkeletonAPP</h1>
   </ion-toolbar>
 </ion-header>
-
+<br>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-label style="font-size: 3em;" class="my-label">Bienvenido!</ion-label>
+  <br>
+  <ion-label>Usuario: {{ usuario }}</ion-label>
+  <br>
+  <br>
+  <ion-label style="font-size: 2em;" class="my-label">Información Adicional</ion-label>
+  <br>
+  <ion-item>
+    <ion-input label="Nombre" placeholder="Ingrese Nombre"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Apellido" placeholder="Ingrese Apellido"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-select label="Nivel Educación" placeholder="Seleccione Nivel">
+      <ion-select-option value="apple">Básica</ion-select-option>
+      <ion-select-option value="banana">Media</ion-select-option>
+      <ion-select-option value="orange">Superior</ion-select-option>
+    </ion-select>
+  </ion-item>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-label style="padding-left: 1em;">Fecha Nacimiento</ion-label>
+  <br><br>
+  <ion-datetime-button datetime="datetime"></ion-datetime-button>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="datetime"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <br><br><br><br>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6"><ion-button>Limpiar</ion-button></ion-col>
+      <ion-col size="6"><ion-button color="tertiary">Mostrar</ion-button></ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+
+<ion-footer style="background-color: gray;height: 2em;">
+  <ion-label>App desarrollada por Kat Ferreira</ion-label>
+</ion-footer>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -7,7 +7,14 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class HomePage {
+  usuario: string = '';
 
-  constructor() {}
+  constructor(private router: Router, private activedRoute: ActivatedRoute) {
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state ?? history.state;
+
+    this.usuario = state?.usuarioEnviado;
+  }
+
 
 }

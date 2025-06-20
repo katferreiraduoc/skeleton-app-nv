@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,13 @@ export class LoginPage implements OnInit {
       this.usuario.length <= 8 &&
       this.clave.length == 4
     ) {
-      this.router.navigate(['/home']);
+      let navigationExtras: NavigationExtras = {
+        state: {
+          usuarioEnviado: this.usuario
+        }
+      }
+      // redirigir menu
+      this.router.navigate(['/home'], navigationExtras);
     }
   }
 
