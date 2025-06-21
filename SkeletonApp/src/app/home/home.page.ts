@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 @Component({
@@ -11,6 +11,7 @@ export class HomePage {
   usuario: string = '';
   nombre: string = '';
   apellido: string = '';
+  fechaNacimiento!: Date;
 
   constructor(private alertController: AlertController,private router: Router, private activedRoute: ActivatedRoute) {
     const nav = this.router.getCurrentNavigation();
