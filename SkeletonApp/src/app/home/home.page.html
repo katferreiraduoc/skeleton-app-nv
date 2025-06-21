@@ -19,7 +19,7 @@
     <ion-input #apellidoInput label="Apellido" placeholder="Ingrese Apellido" [(ngModel)]="apellido" ></ion-input>
   </ion-item>
   <ion-item>
-    <ion-select label="Nivel Educación" placeholder="Seleccione Nivel">
+    <ion-select label="Nivel Educación" placeholder="Seleccione Nivel" [(ngModel)]="nivelEducacion">
       <ion-select-option value="apple">Básica</ion-select-option>
       <ion-select-option value="banana">Media</ion-select-option>
       <ion-select-option value="orange">Superior</ion-select-option>
@@ -30,7 +30,7 @@
   <ion-item>
   <mat-form-field appearance="fill" style="width:100%;">
     <mat-label>Fecha de Nacimiento</mat-label>
-    <input matInput [matDatepicker]="picker">
+    <input matInput [matDatepicker]="picker" [(ngModel)]="fechaNacimiento">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>

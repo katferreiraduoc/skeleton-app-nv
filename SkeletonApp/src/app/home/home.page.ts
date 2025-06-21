@@ -14,7 +14,8 @@ export class HomePage {
   usuario: string = '';
   nombre: string = '';
   apellido: string = '';
-  fechaNacimiento!: Date;
+  nivelEducacion  = '';
+  fechaNacimiento: Date | null = null;
 
   constructor(private alertController: AlertController,private router: Router, private activedRoute: ActivatedRoute, private animationCtrl: AnimationController) {
     const nav = this.router.getCurrentNavigation();
@@ -40,11 +41,11 @@ export class HomePage {
   limpiardatos() {
     this.nombre = '';
     this.apellido = '';
+    this.nivelEducacion = '';
+    this.fechaNacimiento = null;
 
-    // 2) luego disparas la animación en cada input
     [ this.nombreInput, this.apellidoInput ].forEach(input => {
       const el = input.getInputElement(); 
-      // getInputElement() retorna una Promise<HTMLElement>
       el.then(nativeEl => {
         this.animationCtrl
           .create()
