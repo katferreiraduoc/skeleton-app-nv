@@ -13,10 +13,10 @@
   <ion-label style="font-size: 2em;" class="my-label">Información Adicional</ion-label>
   <br>
   <ion-item>
-    <ion-input label="Nombre" placeholder="Ingrese Nombre"></ion-input>
+    <ion-input label="Nombre" placeholder="Ingrese Nombre" [(ngModel)]="nombre" ></ion-input>
   </ion-item>
   <ion-item>
-    <ion-input label="Apellido" placeholder="Ingrese Apellido"></ion-input>
+    <ion-input label="Apellido" placeholder="Ingrese Apellido" [(ngModel)]="apellido" ></ion-input>
   </ion-item>
   <ion-item>
     <ion-select label="Nivel Educación" placeholder="Seleccione Nivel">
@@ -39,7 +39,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size="6"><ion-button>Limpiar</ion-button></ion-col>
-      <ion-col size="6"><ion-button color="tertiary">Mostrar</ion-button></ion-col>
+      <ion-col size="6"><ion-button color="tertiary" (click)="mostrardatos()">Mostrar</ion-button></ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
