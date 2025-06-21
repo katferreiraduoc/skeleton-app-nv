@@ -11,6 +11,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import { HomePageRoutingModule } from './home-routing.module';
 
+import { MisDatosComponent }            from '../components/mis-datos/mis-datos.component';
+import { ExperienciaLaboralComponent }  from '../components/experiencia-laboral/experiencia-laboral.component';
+import { CertificacionesComponent }     from '../components/certificaciones/certificaciones.component';
 
 @NgModule({
   imports: [
@@ -23,6 +26,6 @@ import { HomePageRoutingModule } from './home-routing.module';
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, MisDatosComponent, ExperienciaLaboralComponent, CertificacionesComponent]
 })
 export class HomePageModule {}
