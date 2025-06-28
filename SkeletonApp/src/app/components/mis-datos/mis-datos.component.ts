@@ -29,9 +29,9 @@ export class MisDatosComponent  implements OnInit {
 
   segmentValue: 'mis-datos' | 'experiencia' | 'certificaciones' = 'mis-datos';
 
-  async presentAlert(msj: string) {
+  async presentAlert( header: string, msj: string) {
     const alert = await this.alertController.create({
-      header: 'Usuario',
+      header: header,
       message: msj,
       buttons: ['OK'],
     });
@@ -40,7 +40,11 @@ export class MisDatosComponent  implements OnInit {
   }
 
   mostrardatos(){
-    this.presentAlert("Su nombre es "+this.nombre+" "+this.apellido)
+    if( !this.nombre || !this.apellido){
+      this.presentAlert("Atención","Debe completar los datos para poder mostrarlos.")
+    }else{
+      this.presentAlert("Usuario","Su nombre es "+this.nombre+" "+this.apellido)
+    }
   }
 
   limpiardatos() {
