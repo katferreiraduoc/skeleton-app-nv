@@ -1,3 +1,48 @@
-<p>
-  experiencia-laboral works!
-</p>
+  <ion-label style="font-size: 2em;" class="my-label">Experiencia Laboral</ion-label>
+  <br>
+  <ion-item>
+    <ion-input #nombreInput label="Nombre Empresa" placeholder="Ingrese Nombre Empresa"
+      [(ngModel)]="nombreEmpresa"></ion-input>
+  </ion-item>
+  <br><br>
+  <ion-item>
+    <mat-form-field appearance="fill" style="width:100%;">
+      <mat-label>Fecha de Inicio</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="fechaInicio">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </ion-item>
+  <ion-item>
+    <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="empleoActual" (click)="showFechaFin()">Actualmente trabajo aquí </ion-toggle>
+  </ion-item>
+  <ion-item *ngIf="isVisible === true">
+    <mat-form-field appearance="fill" style="width:100%;">
+      <mat-label>Fecha Fin</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="fechaFin">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </ion-item>
+  <ion-item>
+    <ion-input #cargoInput label="Cargo" placeholder="Ingrese Cargo" [(ngModel)]="cargo"></ion-input>
+  </ion-item>
+  <ion-item>
+<ion-button (click)="agregarExperiencia()">Agregar</ion-button>
+  </ion-item>
+
+  <ion-label style="font-size: 1.5em;" class="my-label">Experiencia Registrada</ion-label>
+  <br>
+
+  <ion-list *ngIf="experiencias.length > 0">
+  <ion-item *ngFor="let exp of experiencias; let i = index">
+    <ion-label>
+      <h2>{{ exp.nomEmpresa }}</h2>
+      <p>{{ exp.fecInicio }} – {{ exp.fecFin }}</p>
+      <p>Cargo: {{ exp.cargo }}</p>
+    </ion-label>
+    <ion-button fill="clear" slot="end" (click)="eliminarExperiencia(i)">
+      <ion-icon name="trash" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-list>
