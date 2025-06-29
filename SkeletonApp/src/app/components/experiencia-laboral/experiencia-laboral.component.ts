@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { DBTaskService, Experiencia } from 'src/app/services/dbtask.service';
 
 @Component({
   selector: 'app-experiencia-laboral',
@@ -8,24 +10,26 @@ import { AlertController } from '@ionic/angular';
   standalone: false,
 })
 export class ExperienciaLaboralComponent implements OnInit {
+  experiencias$!: Observable<Experiencia[]>;
+
   nombreEmpresa: string = '';
   fechaInicio: Date | null = new Date();
   empleoActual: boolean = false;
   fechaFin: Date | null = null;
   cargo: string = '';
-  experiencia: any = [];
-
-  experiencias: Array<{
-    nomEmpresa: string;
-    fecInicio: string;
-    fecFin?: string;
-    empleoActual: boolean;
-    cargo: string;
-  }> = [];
 
   isVisible: boolean = true;
 
-  constructor(private alertController: AlertController) {}
+  constructor(
+    private alertController: AlertController,
+    private db: DBTaskService
+  ) {}
+
+  async ngOnInit() {
+    await this.db.initDB();
+    this.experiencias$ = this.db.exp$;
+    await this.db.loadExperiencias();
+  }
 
   async presentAlert(header: string, msj: string) {
     const alert = await this.alertController.create({
@@ -41,37 +45,30 @@ export class ExperienciaLaboralComponent implements OnInit {
     this.isVisible = !this.isVisible;
   }
 
-  agregarExperiencia() {
+  async agregarExperiencia() {
     if (!this.nombreEmpresa || !this.fechaInicio || !this.cargo) {
       this.presentAlert(
         'Atención',
         'Debe completar los datos para poder agregarlos.'
       );
     } else {
-      const nueva = {
-        nomEmpresa: this.nombreEmpresa,
-        fecInicio: this.fechaInicio?.toLocaleDateString() ?? '',
-        fecFin: this.empleoActual
-          ? 'Presente'
-          : this.fechaFin?.toLocaleDateString() ?? '',
-        empleoActual: this.empleoActual,
-        cargo: this.cargo,
-      };
+      await this.db.addExperiencia({
+      empresa: this.nombreEmpresa,
+      fecha_inicio: this.fechaInicio,
+      fecha_fin: this.empleoActual ? undefined : this.fechaFin!,
+      empleo_actual: this.empleoActual,
+      cargo: this.cargo
+    });
 
-      this.experiencias.push(nueva);
-
-      this.nombreEmpresa = '';
-      this.fechaInicio = null;
-      this.empleoActual = false;
-      this.fechaFin = null;
-      this.cargo = '';
-      this.isVisible = false;
+    this.nombreEmpresa = '';
+    this.fechaInicio = new Date();
+    this.fechaFin = null;
+    this.empleoActual = false;
+    this.cargo = '';
     }
   }
 
-  eliminarExperiencia(idx: number) {
-    this.experiencias.splice(idx, 1);
+  async eliminarExperiencia(idx: number) {
+    await this.db.deleteExperiencia(idx);
   }
-
-  ngOnInit() {}
 }
