@@ -20,6 +20,9 @@ export class ExperienciaLaboralComponent implements OnInit {
 
   isVisible: boolean = true;
 
+  editing = false;
+  editId: number | null = null;
+
   constructor(
     private alertController: AlertController,
     private db: DBTaskService
@@ -45,30 +48,59 @@ export class ExperienciaLaboralComponent implements OnInit {
     this.isVisible = !this.isVisible;
   }
 
-  async agregarExperiencia() {
+  async guardarExperiencia() {
     if (!this.nombreEmpresa || !this.fechaInicio || !this.cargo) {
       this.presentAlert(
         'Atención',
         'Debe completar los datos para poder agregarlos.'
       );
     } else {
-      await this.db.addExperiencia({
-      empresa: this.nombreEmpresa,
-      fecha_inicio: this.fechaInicio,
-      fecha_fin: this.empleoActual ? undefined : this.fechaFin!,
-      empleo_actual: this.empleoActual,
-      cargo: this.cargo
-    });
+      const data = {
+        empresa: this.nombreEmpresa,
+        fecha_inicio: this.fechaInicio,
+        fecha_fin: this.empleoActual ? undefined : this.fechaFin!,
+        empleo_actual: this.empleoActual,
+        cargo: this.cargo,
+      };
 
+      if (this.editing && this.editId !== null) {
+        console.log('🔄 [COMP] Update id=', this.editId, 'con →', data);
+        await this.db.updateExperiencia(this.editId, data);
+      } else {
+        console.log('➕ [COMP] Add →', data);
+        await this.db.addExperiencia(data);
+      }
+      await this.db.loadExperiencias();
+      this.resetForm();
+    }
+  }
+
+  editarExperiencia(exp: Experiencia) {
+    this.editing = true;
+    this.editId = exp.id;
+
+    this.nombreEmpresa = exp.empresa;
+    this.fechaInicio = exp.fecha_inicio;
+    this.empleoActual = exp.empleo_actual;
+    this.fechaFin = exp.fecha_fin;
+    this.cargo = exp.cargo;
+  }
+
+  async eliminarExperiencia(idx: number) {
+    await this.db.deleteExperiencia(idx);
+    if (this.editing && this.editId === idx) {
+      this.resetForm();
+    }
+  }
+
+  public resetForm() {
     this.nombreEmpresa = '';
     this.fechaInicio = new Date();
     this.fechaFin = null;
     this.empleoActual = false;
     this.cargo = '';
-    }
-  }
-
-  async eliminarExperiencia(idx: number) {
-    await this.db.deleteExperiencia(idx);
+    this.editing = false;
+    this.editId = null;
+    this.isVisible = true;
   }
 }

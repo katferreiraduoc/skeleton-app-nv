@@ -39,6 +39,8 @@ export class LoginPage implements OnInit {
           },
         };
         this.router.navigate(['/home'], navigationExtras);
+      } else {
+        this.presentAlert('Usuario y/o Contraseña Incorrecta');
       }
     } else {
       this.presentAlert('Usuario y/o Contraseña Incorrecta');

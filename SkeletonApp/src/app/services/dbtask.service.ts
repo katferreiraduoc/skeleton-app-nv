@@ -153,23 +153,32 @@ export class DBTaskService {
       cargo: string;
     }>
   ): Promise<void> {
+    const entries = Object.entries(data).filter(([_, v]) => v !== undefined);
+
     const sets: string[] = [];
     const vals: any[] = [];
-    Object.entries(data).forEach(([k, v]) => {
+
+    for (const [k, v] of entries) {
       sets.push(`${k} = ?`);
-      if (k === 'fecha_inicio' || k === 'fecha_fin') {
+
+      if (k === 'fecha_inicio') {
         vals.push((v as Date).toISOString());
+      } else if (k === 'fecha_fin') {
+        vals.push(v ? (v as Date).toISOString() : null);
       } else if (k === 'empleo_actual') {
-        vals.push(v ? 1 : 0);
+        vals.push((v as boolean) ? 1 : 0);
       } else {
         vals.push(v);
       }
-    });
+    }
+
     vals.push(id);
+
     await this.dbObject.executeSql(
       `UPDATE experiencia_laboral SET ${sets.join(',')} WHERE id = ?;`,
       vals
     );
+    
     await this.loadExperiencias();
   }
 }
