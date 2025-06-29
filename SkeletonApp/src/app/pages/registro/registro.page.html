@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="onRegistro()" #regForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Usuario</ion-label>
+      <ion-input
+        name="user"
+        required
+        minlength="3"
+        maxlength="8"
+        [(ngModel)]="user">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input
+        name="pass"
+        type="password"
+        required
+        minlength="4"
+        [(ngModel)]="pass">
+      </ion-input>
+    </ion-item>
+
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="regForm.invalid">
+      Crear cuenta
+    </ion-button>
+
+    <ion-button
+      fill="clear"
+      expand="block"
+      (click)="goToLogin()">
+      ¿Ya tienes cuenta? Inicia sesión
+    </ion-button>
+  </form>
+</ion-content>

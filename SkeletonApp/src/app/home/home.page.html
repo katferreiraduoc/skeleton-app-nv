@@ -36,5 +36,12 @@
 </ion-content>
 
 <ion-footer style="background-color: gray;height: 2em;">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
   <ion-label>App desarrollada por Kat Ferreira</ion-label>
 </ion-footer>
