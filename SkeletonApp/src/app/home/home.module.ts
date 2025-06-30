@@ -14,6 +14,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { MisDatosComponent }            from '../components/mis-datos/mis-datos.component';
 import { ExperienciaLaboralComponent }  from '../components/experiencia-laboral/experiencia-laboral.component';
 import { CertificacionesComponent }     from '../components/certificaciones/certificaciones.component';
+import { PreferenciasComponent } from '../components/preferencias/preferencias.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,6 @@ import { CertificacionesComponent }     from '../components/certificaciones/cert
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  declarations: [HomePage, MisDatosComponent, ExperienciaLaboralComponent, CertificacionesComponent]
+  declarations: [HomePage, MisDatosComponent, ExperienciaLaboralComponent, CertificacionesComponent, PreferenciasComponent]
 })
 export class HomePageModule {}

@@ -17,6 +17,9 @@
   <ion-segment-button value="certificaciones">
     Certificaciones
   </ion-segment-button>
+  <ion-segment-button value="preferencias">
+    Preferencias
+  </ion-segment-button>
 </ion-segment>
 
 <ng-container [ngSwitch]="segmentValue">
@@ -31,6 +34,10 @@
   <app-certificaciones
     *ngSwitchCase="'certificaciones'">
   </app-certificaciones>
+
+  <app-preferencias
+    *ngSwitchCase="'preferencias'">
+  </app-preferencias>
 </ng-container>
 
 </ion-content>

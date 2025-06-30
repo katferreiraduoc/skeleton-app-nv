@@ -25,8 +25,8 @@ export interface Perfil {
   apellido: string;
   nivelEducacion: string;
   fechaNacimiento: string;
+  platoFav?: string;
 }
-
 
 @Injectable({
   providedIn: 'root',
@@ -316,5 +316,14 @@ export class DBTaskService {
 
   public async clearPerfil(): Promise<void> {
     await this.storage.remove('perfil');
+  }
+
+  public async savePlatoFav(platos: string[]): Promise<void> {
+    await this.storage.set('platosFav', platos);
+  }
+
+  public async getPlatosFav(): Promise<string[]> {
+    const arr = await this.storage.get('platosFav');
+    return Array.isArray(arr) ? arr : [];
   }
 }

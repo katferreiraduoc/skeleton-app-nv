@@ -1,0 +1,17 @@
+<ion-spinner *ngIf="loading" style="display:block; margin:auto"></ion-spinner>
+
+<ion-grid *ngIf="!loading">
+  <ion-row>
+    <ion-col size="6" *ngFor="let p of platos">
+      <ion-card [class.selected]="isSelected(p.strCategory)" (click)="toggle(p.strCategory)">
+        <img [src]="p.strCategoryThumb" />
+        <ion-card-content>
+          {{ p.strCategory }}
+          <ion-checkbox slot="end" [checked]="isSelected(p.strCategory)"></ion-checkbox>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<ion-button expand="block" (click)="savePlatoFav()">Guardar Plato(s)</ion-button>

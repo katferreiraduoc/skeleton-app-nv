@@ -23,7 +23,7 @@ export class HomePage {
     this.router.navigate(['/login']);
   }
 
-  segmentValue: 'mis-datos' | 'experiencia' | 'certificaciones' = 'mis-datos';
+  segmentValue: 'mis-datos' | 'experiencia' | 'certificaciones' | 'preferencias' = 'mis-datos';
 
   
 }

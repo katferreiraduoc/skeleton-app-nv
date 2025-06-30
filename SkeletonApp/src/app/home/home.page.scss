@@ -30,3 +30,13 @@
   display: flex;
   justify-content: center;
 }
+
+ion-segment {
+  --padding-start: 0;
+  --padding-end: 0;
+
+  ion-segment-button {
+    font-size: 0.55rem;
+    padding: 0 6px;
+  }
+}
