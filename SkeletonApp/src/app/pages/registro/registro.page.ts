@@ -7,39 +7,47 @@ import { DBTaskService } from 'src/app/services/dbtask.service';
   selector: 'app-registro',
   templateUrl: './registro.page.html',
   styleUrls: ['./registro.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class RegistroPage implements OnInit {
-
   user = '';
   pass!: string;
 
-  constructor(private dbTask: DBTaskService,
+  constructor(
+    private dbTask: DBTaskService,
     private router: Router,
-    private alertCtrl: AlertController) { }
+    private alertController: AlertController
+  ) {}
 
-  async onRegistro(){
-    await this.dbTask.initDB();
+  async onRegistro() {
+    if (!this.user || !this.pass) {
+      const alert = await this.alertController.create({
+        header: 'Atención!',
+        message: `Usuario y contraseña obligatorios.`,
+        buttons: ['OK'],
+      });
+      await alert.present();
+    } else {
+      await this.dbTask.initDB();
 
-    await this.dbTask.registerSession(this.user, this.pass);
+      await this.dbTask.registerSession(this.user, this.pass);
 
-    const alert = await this.alertCtrl.create({
-      header: '¡Bienvenido!',
-      message: `Cuenta creada para ${this.user}`,
-      buttons: ['OK']
-    });
-    await alert.present();
+      const alert = await this.alertController.create({
+        header: '¡Bienvenido!',
+        message: `Cuenta creada para ${this.user}`,
+        buttons: ['OK'],
+      });
+      await alert.present();
 
-    this.router.navigate(['/home'], {
-      state: { usuarioEnviado: this.user }
-    });
+      this.router.navigate(['/home'], {
+        state: { usuarioEnviado: this.user },
+      });
+    }
   }
 
   goToLogin() {
     this.router.navigate(['/login']);
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
