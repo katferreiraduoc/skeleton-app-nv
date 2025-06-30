@@ -12,6 +12,22 @@ export interface Experiencia {
   cargo: string;
 }
 
+export interface Certificacion {
+  id: number;
+  nombre_certificado: string;
+  fecha_obtencion: Date;
+  tiene_vencimiento: boolean;
+  fecha_vencimiento: Date | null;
+}
+
+export interface Perfil {
+  nombre: string;
+  apellido: string;
+  nivelEducacion: string;
+  fechaNacimiento: string;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -20,6 +36,9 @@ export class DBTaskService {
 
   private _exp$ = new BehaviorSubject<Experiencia[]>([]);
   public exp$ = this._exp$.asObservable();
+
+  private _certs$ = new BehaviorSubject<Certificacion[]>([]);
+  public certs$ = this._certs$.asObservable();
 
   constructor(private sqlite: SQLite, private storage: Storage) {}
 
@@ -54,6 +73,19 @@ export class DBTaskService {
         empleo_actual  INTEGER NOT NULL,
         cargo          TEXT    NOT NULL
       );`,
+      []
+    );
+
+    await this.dbObject.executeSql(
+      `
+      CREATE TABLE IF NOT EXISTS certificaciones (
+        id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre_certificado  TEXT    NOT NULL,
+        fecha_obtencion     TEXT    NOT NULL,
+        tiene_vencimiento   INTEGER NOT NULL,
+        fecha_vencimiento   TEXT
+      );
+    `,
       []
     );
   }
@@ -178,7 +210,111 @@ export class DBTaskService {
       `UPDATE experiencia_laboral SET ${sets.join(',')} WHERE id = ?;`,
       vals
     );
-    
+
     await this.loadExperiencias();
+  }
+
+  public async loadCertificaciones(): Promise<void> {
+    const rs = await this.dbObject.executeSql(
+      'SELECT * FROM certificaciones;',
+      []
+    );
+    const arr: Certificacion[] = [];
+    for (let i = 0; i < rs.rows.length; i++) {
+      const r = rs.rows.item(i);
+      arr.push({
+        id: r.id,
+        nombre_certificado: r.nombre_certificado,
+        fecha_obtencion: new Date(r.fecha_obtencion),
+        tiene_vencimiento: r.tiene_vencimiento === 1,
+        fecha_vencimiento: r.fecha_vencimiento
+          ? new Date(r.fecha_vencimiento)
+          : null,
+      });
+    }
+    this._certs$.next(arr);
+  }
+
+  public async addCertificacion(data: {
+    nombre_certificado: string;
+    fecha_obtencion: Date;
+    tiene_vencimiento: boolean;
+    fecha_vencimiento?: Date | null;
+  }): Promise<void> {
+    await this.dbObject.executeSql(
+      `INSERT INTO certificaciones
+         (nombre_certificado, fecha_obtencion, tiene_vencimiento, fecha_vencimiento)
+       VALUES (?,?,?,?);`,
+      [
+        data.nombre_certificado,
+        data.fecha_obtencion.toISOString(),
+        data.tiene_vencimiento ? 1 : 0,
+        data.fecha_vencimiento?.toISOString() || null,
+      ]
+    );
+    await this.loadCertificaciones();
+  }
+
+  public async deleteCertificacion(id: number): Promise<void> {
+    await this.dbObject.executeSql(
+      'DELETE FROM certificaciones WHERE id = ?;',
+      [id]
+    );
+    await this.loadCertificaciones();
+  }
+
+  public async updateCertificacion(
+    id: number,
+    data: Partial<{
+      nombre_certificado: string;
+      fecha_obtencion: Date;
+      tiene_vencimiento: boolean;
+      fecha_vencimiento: Date | null;
+    }>
+  ): Promise<void> {
+    const entries = Object.entries(data);
+    const sets: string[] = [];
+    const vals: any[] = [];
+
+    for (const [k, v] of entries) {
+      sets.push(`${k} = ?`);
+
+      if (k === 'fecha_obtencion') {
+        vals.push((v as Date).toISOString());
+      } else if (k === 'fecha_vencimiento') {
+        if (v instanceof Date) {
+          vals.push(v.toISOString());
+        } else {
+          vals.push(null);
+        }
+      } else if (k === 'tiene_vencimiento') {
+        vals.push((v as boolean) ? 1 : 0);
+      } else {
+        vals.push(v);
+      }
+    }
+
+    vals.push(id);
+
+    await this.dbObject.executeSql(
+      `UPDATE certificaciones
+       SET ${sets.join(', ')}
+     WHERE id = ?;`,
+      vals
+    );
+
+    await this.loadCertificaciones();
+  }
+
+  public async savePerfil(p: Perfil): Promise<void> {
+    await this.storage.set('perfil', p);
+  }
+
+  public async getPerfil(): Promise<Perfil | null> {
+    return (await this.storage.get('perfil')) as Perfil | null;
+  }
+
+  public async clearPerfil(): Promise<void> {
+    await this.storage.remove('perfil');
   }
 }

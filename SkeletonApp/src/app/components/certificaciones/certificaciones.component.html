@@ -14,9 +14,9 @@
     </mat-form-field>
   </ion-item>
   <ion-item>
-    <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="certificadoVence" (click)="showFechaVencimiento()">El certificado vence? </ion-toggle>
+    <ion-toggle [enableOnOffLabels]="true" [(ngModel)]="certificadoVence" (ionChange)="showFechaVencimiento()">El certificado vence? </ion-toggle>
   </ion-item>
-  <ion-item *ngIf="isVisible === true">
+  <ion-item *ngIf="isVisible">
     <mat-form-field appearance="fill" style="width:100%;">
       <mat-label>Fecha Vencimiento</mat-label>
       <input matInput [matDatepicker]="picker" [(ngModel)]="fechaVencimiento">
@@ -25,20 +25,37 @@
     </mat-form-field>
   </ion-item>
   <ion-item>
-<ion-button (click)="agregarCertificacion()">Agregar</ion-button>
+<ion-button expand="block" (click)="guardarCertificacion()">{{ editing ? 'Actualizar' : 'Agregar' }}</ion-button>
   </ion-item>
+  <ion-item *ngIf="editing">
+  <ion-button
+    expand="block"
+    fill="outline"
+    color="medium"
+    (click)="resetForm()">
+    Cancelar
+  </ion-button>
+</ion-item>
 
   <ion-label style="font-size: 1.5em;" class="my-label">Certificaciones Registradas</ion-label>
   <br>
 
-  <ion-list *ngIf="certificados.length > 0">
-  <ion-item *ngFor="let cert of certificados; let i = index">
+  <ion-list *ngIf="(certs$ | async)?.length">
+  <ion-item *ngFor="let cert of certs$ | async">
     <ion-label>
-      <h2>{{ cert.nomCert }}</h2>
-      <p>{{ cert.fecObtencion }} – {{ cert.fecVencimiento }}</p>
+      <h2>{{ cert.nombre_certificado }}</h2>
+      <p>{{ cert.fecha_obtencion | date:'yyyy-MM-dd' }}
+        –
+        {{ cert.fecha_vencimiento
+           ? (cert.fecha_vencimiento | date:'yyyy-MM-dd')
+           : 'Sin vencimiento' }}</p>
     </ion-label>
-    <ion-button fill="clear" slot="end" (click)="eliminarCertificacion(i)">
-      <ion-icon name="trash" slot="icon-only"></ion-icon>
+    <ion-button fill="clear" slot="end" (click)="editarCertificacion(cert)">
+      <ion-icon name="create" slot="icon-only"></ion-icon>
+    </ion-button>
+
+     <ion-button fill="clear" slot="end" (click)="eliminarCertificacion(cert.id)">
+      <ion-icon name="trash"></ion-icon>
     </ion-button>
   </ion-item>
 </ion-list>
