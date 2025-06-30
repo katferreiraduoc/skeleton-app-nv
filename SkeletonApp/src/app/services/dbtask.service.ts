@@ -26,6 +26,9 @@ export interface Perfil {
   nivelEducacion: string;
   fechaNacimiento: string;
   platoFav?: string;
+  lat?: number;
+  lng?: number;
+  direccion?: string;
 }
 
 @Injectable({

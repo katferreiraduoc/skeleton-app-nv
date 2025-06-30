@@ -23,11 +23,23 @@
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 </ion-item>
+<br><br>
+<ion-item>
+  <ion-button expand="block" (click)="obtenerUbicacion()">
+    Obtener mi ubicación
+  </ion-button>
+</ion-item>
+<ion-item *ngIf="lat !== null">
+  <ion-label>Lat: {{ lat.toFixed(5) }}, Lng: {{ lng?.toFixed(5) }}</ion-label>
+  <ion-label *ngIf="direccion">{{ direccion }}</ion-label>
+</ion-item>
+
 <br><br><br><br>
 <ion-grid>
   <ion-row>
     <ion-col size="4"><ion-button color="warning" (click)="limpiardatos()">Limpiar</ion-button></ion-col>
     <ion-col size="4"><ion-button color="tertiary" (click)="mostrardatos()">Mostrar</ion-button></ion-col>
-    <ion-col size="4"><ion-button expand="block" color="success" (click)="guardarPerfil()">Guardar</ion-button></ion-col>
+    <ion-col size="4"><ion-button expand="block" color="success"
+        (click)="guardarPerfil()">Guardar</ion-button></ion-col>
   </ion-row>
 </ion-grid>

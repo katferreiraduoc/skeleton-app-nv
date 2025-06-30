@@ -3,6 +3,7 @@ import { ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, IonInput, AnimationController } from '@ionic/angular';
 import { DBTaskService, Perfil } from 'src/app/services/dbtask.service';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-mis-datos',
@@ -21,6 +22,9 @@ export class MisDatosComponent implements OnInit {
   apellido: string = '';
   nivelEducacion = '';
   fechaNacimiento: Date = new Date();
+  lat: number | null = null;
+  lng: number | null = null;
+  direccion: string | null = null;
 
   constructor(
     private db: DBTaskService,
@@ -42,6 +46,8 @@ export class MisDatosComponent implements OnInit {
       this.apellido = p.apellido;
       this.nivelEducacion = p.nivelEducacion;
       this.fechaNacimiento = new Date(p.fechaNacimiento);
+      this.lat = p.lat ?? null;
+      this.lng = p.lng ?? null;
     }
   }
 
@@ -76,6 +82,7 @@ export class MisDatosComponent implements OnInit {
     this.apellido = '';
     this.nivelEducacion = '';
     this.fechaNacimiento = new Date();
+    this.lat = this.lng = null;
 
     [this.nombreInput, this.apellidoInput].forEach((input) => {
       const el = input.getInputElement();
@@ -91,17 +98,52 @@ export class MisDatosComponent implements OnInit {
     });
   }
 
+  async reverseGeocode(lat: number, lng: number): Promise<string> {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    return data.display_name;
+  }
+
+  async obtenerUbicacion() {
+    try {
+      const perm = await Geolocation.requestPermissions();
+      if (perm.location === 'denied') {
+        return this.presentAlert('Error', 'Permiso de ubicación denegado');
+      }
+      const pos = await Geolocation.getCurrentPosition();
+      this.lat = pos.coords.latitude;
+      this.lng = pos.coords.longitude;
+      this.direccion = 'Obteniendo dirección…';
+      this.direccion = await this.reverseGeocode(this.lat, this.lng);
+
+      this.presentAlert(
+        'Ubicación',
+        `Lat: ${this.lat.toFixed(5)}, Lng: ${this.lng.toFixed(5)}`
+      );
+    } catch (err) {
+      console.error(err);
+      this.presentAlert('Error', 'No se pudo obtener la ubicación.');
+    }
+  }
+
   async guardarPerfil() {
     if (!this.nombre || !this.apellido) {
-      return this.presentAlert('Atención','Rellena nombre y apellido antes de guardar.');
+      return this.presentAlert(
+        'Atención',
+        'Rellena nombre y apellido antes de guardar.'
+      );
     }
     const perfil: Perfil = {
       nombre: this.nombre,
       apellido: this.apellido,
       nivelEducacion: this.nivelEducacion,
-      fechaNacimiento: this.fechaNacimiento.toISOString()
+      fechaNacimiento: this.fechaNacimiento.toISOString(),
+      lat: this.lat ?? undefined,
+      lng: this.lng ?? undefined,
+      direccion: this.direccion ?? undefined
     };
     await this.db.savePerfil(perfil);
-    this.presentAlert('OK','Perfil guardado correctamente.');
+    this.presentAlert('OK', 'Perfil guardado correctamente.');
   }
 }
