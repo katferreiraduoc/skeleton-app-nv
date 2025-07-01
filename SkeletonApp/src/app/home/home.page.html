@@ -1,48 +1,44 @@
 <ion-header [translucent]="true">
   <ion-toolbar style="text-align:left">
-    <h1>SkeletonAPP</h1>
+    <h1>Mi Identidad</h1>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ion-label style="font-size: 3em;" class="my-label">Bienvenido!</ion-label>
   <br>
-  <ion-label>Usuario: {{ usuario }}</ion-label>
- <ion-segment [(ngModel)]="segmentValue">
-  <ion-segment-button value="mis-datos">
-    Mis Datos
-  </ion-segment-button>
-  <ion-segment-button value="experiencia">
-    Experiencia
-  </ion-segment-button>
-  <ion-segment-button value="certificaciones">
-    Certificaciones
-  </ion-segment-button>
-  <ion-segment-button value="preferencias">
-    Preferencias
-  </ion-segment-button>
-</ion-segment>
+  <ion-label style="font-size: 2em;" class="my-label">Hola, {{ usuario }}!</ion-label>
+  <br>
+  <ion-segment [(ngModel)]="segmentValue">
+    <ion-segment-button value="mis-datos">
+      Mis Datos
+    </ion-segment-button>
+    <ion-segment-button value="experiencia">
+      Experiencia
+    </ion-segment-button>
+    <ion-segment-button value="certificaciones">
+      Certificaciones
+    </ion-segment-button>
+    <ion-segment-button value="preferencias">
+      Preferencias
+    </ion-segment-button>
+  </ion-segment>
 
-<ng-container [ngSwitch]="segmentValue">
-  <app-mis-datos
-    *ngSwitchCase="'mis-datos'">
-  </app-mis-datos>
+  <ng-container [ngSwitch]="segmentValue">
+    <app-mis-datos *ngSwitchCase="'mis-datos'">
+    </app-mis-datos>
 
-  <app-experiencia-laboral
-    *ngSwitchCase="'experiencia'">
-  </app-experiencia-laboral>
+    <app-experiencia-laboral *ngSwitchCase="'experiencia'">
+    </app-experiencia-laboral>
 
-  <app-certificaciones
-    *ngSwitchCase="'certificaciones'">
-  </app-certificaciones>
+    <app-certificaciones *ngSwitchCase="'certificaciones'">
+    </app-certificaciones>
 
-  <app-preferencias
-    *ngSwitchCase="'preferencias'">
-  </app-preferencias>
-</ng-container>
+    <app-preferencias *ngSwitchCase="'preferencias'">
+    </app-preferencias>
+  </ng-container>
 
 </ion-content>
 
-<ion-footer style="background-color: gray;height: 2em;">
+<ion-footer style="background-color: gray;height: 3em;">
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button color="danger" (click)="logout()">
@@ -50,5 +46,4 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-label>App desarrollada por Kat Ferreira</ion-label>
 </ion-footer>

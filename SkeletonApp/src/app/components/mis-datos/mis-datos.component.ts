@@ -119,7 +119,7 @@ export class MisDatosComponent implements OnInit {
 
       this.presentAlert(
         'Ubicación',
-        `Lat: ${this.lat.toFixed(5)}, Lng: ${this.lng.toFixed(5)}`
+        `${this.direccion}`
       );
     } catch (err) {
       console.error(err);
