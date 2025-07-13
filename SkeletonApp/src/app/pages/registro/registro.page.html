@@ -9,6 +9,7 @@
     <ion-item>
       <ion-label position="floating">Usuario</ion-label>
       <ion-input
+        data-cy="registro-user"
         name="user"
         required
         minlength="3"
@@ -20,6 +21,7 @@
     <ion-item>
       <ion-label position="floating">Contraseña</ion-label>
       <ion-input
+        data-cy="registro-pass"
         name="pass"
         type="password"
         required
@@ -29,6 +31,7 @@
     </ion-item>
 
     <ion-button
+      data-cy="registro-submit"
       expand="block"
       type="submit"
       [disabled]="regForm.invalid">

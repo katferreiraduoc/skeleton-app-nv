@@ -4,23 +4,39 @@
     <h6>Centraliza tu Identidad</h6>
   </ion-toolbar>
 </ion-header>
-<br>
+
 <ion-content [fullscreen]="true">
   <h5 style="text-align: center;">Bienvenido!</h5>
+
   <ion-item>
-    <ion-input label="Ingresa tu Usuario" labelPlacement="floating" placeholder="" type="text"
-      [(ngModel)]="usuario" required minlength="3" maxlength="8"></ion-input>
+    <ion-label position="floating">Ingresa tu Usuario</ion-label>
+    <ion-input
+      data-cy="usuario-input"
+      type="text"
+      [(ngModel)]="usuario"
+      required
+      minlength="3"
+      maxlength="8">
+    </ion-input>
   </ion-item>
+
   <ion-item>
-    <ion-input label="Ingresa tu Clave" labelPlacement="floating" placeholder="" type="password"
-      [(ngModel)]="clave" required maxlength="4"></ion-input>
+    <ion-label position="floating">Ingresa tu Clave</ion-label>
+    <ion-input
+      data-cy="clave-input"
+      placeholder="••••"
+      [(ngModel)]="clave"
+      required
+      maxlength="4">
+    </ion-input>
   </ion-item>
-  <br>
-  <ion-button expand="full" (click)="iniciosesion()">Ingresar</ion-button>
-  <br>
-  <br>
-  <h5 style="text-align: center;">
-    <a [routerLink]="['/registro']" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+
+  <ion-button expand="full" (click)="iniciosesion()">
+    Ingresar
+  </ion-button>
+
+  <h5 style="text-align: center; margin-top: 1rem;">
+    <a [routerLink]="['/registro']" style="color: #007bff; text-decoration: underline;">
       Crea tu cuenta gratis
     </a>
   </h5>
