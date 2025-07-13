@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { DBTaskService } from './dbtask.service';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { Storage } from '@ionic/storage-angular';
+import { Platform } from '@ionic/angular';
 
 interface AddExperienciaDTO {
   empresa: string;
@@ -15,38 +16,48 @@ describe('DBTaskService', () => {
   let service: DBTaskService;
   let sqliteSpy: jasmine.SpyObj<SQLite>;
   let storageSpy: jasmine.SpyObj<Storage>;
+  let platformSpy: jasmine.SpyObj<Platform>;
   let dbObjectSpy: jasmine.SpyObj<SQLiteObject>;
 
   beforeEach(async () => {
     dbObjectSpy = jasmine.createSpyObj<SQLiteObject>('SQLiteObject', [
       'executeSql',
     ]);
+
     sqliteSpy = jasmine.createSpyObj<SQLite>('SQLite', ['create']);
+    sqliteSpy.create.and.returnValue(Promise.resolve(dbObjectSpy));
+
     storageSpy = jasmine.createSpyObj<Storage>('Storage', [
       'create',
       'get',
       'set',
       'remove',
     ]);
-
-    sqliteSpy.create.and.returnValue(Promise.resolve(dbObjectSpy));
     storageSpy.create.and.returnValue(Promise.resolve(storageSpy));
+
+    platformSpy = jasmine.createSpyObj<Platform>('Platform', ['is']);
+    platformSpy.is.and.callFake((platformName: string) =>
+      platformName === 'hybrid'
+    );
 
     await TestBed.configureTestingModule({
       providers: [
         DBTaskService,
         { provide: SQLite, useValue: sqliteSpy },
         { provide: Storage, useValue: storageSpy },
+        { provide: Platform, useValue: platformSpy },
       ],
     }).compileComponents();
 
-    dbObjectSpy.executeSql.and.callFake((sql: string, params: any[]) =>
-      Promise.resolve(
-        (sql.trim().toUpperCase().startsWith('SELECT')
-          ? { rows: { length: 0, item: (_: number) => null } }
-          : {}) as any
-      )
-    );
+    dbObjectSpy.executeSql.and.callFake((sql: string, _params: any[]) => {
+      const txt = sql.trim().toUpperCase();
+      if (txt.startsWith('SELECT')) {
+        return Promise.resolve({
+          rows: { length: 0, item: (_: number) => null },
+        } as any);
+      }
+      return Promise.resolve({} as any);
+    });
 
     service = TestBed.inject(DBTaskService);
   });
@@ -59,6 +70,7 @@ describe('DBTaskService', () => {
     const crearTablasSpy = spyOn<any>(service, 'crearTablas').and.returnValue(
       Promise.resolve()
     );
+
     await service.initDB();
 
     expect(storageSpy.create).toHaveBeenCalled();
@@ -112,12 +124,12 @@ describe('DBTaskService', () => {
     await service.initDB();
     dbObjectSpy.executeSql.and.returnValue(Promise.resolve(mockRes));
 
-    let result: any;
-    service.exp$.subscribe((res) => (result = res));
+    let resultado: any[] = [];
+    service.exp$.subscribe((arr) => (resultado = arr));
 
     await service.loadExperiencias();
-    expect(result).toBeDefined();
-    expect(result.length).toBe(2);
-    expect(result[0].empresa).toBe('Empresa1');
+    expect(resultado).toBeDefined();
+    expect(resultado.length).toBe(2);
+    expect(resultado[0].empresa).toBe('Empresa1');
   });
 });
