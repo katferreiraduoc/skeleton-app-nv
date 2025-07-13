@@ -70,12 +70,40 @@
             },
             "ci": {
               "progress": false
+            },
+            "android": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.android.ts"
+                }
+              ]
+            },
+            "ios": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.ios.ts"
+                }
+              ]
+            },
+            "mobileweb": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.mobileweb.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
         },
+
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "app:build"
+          },
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"
@@ -84,17 +112,29 @@
               "buildTarget": "app:build:development"
             },
             "ci": {
+              "buildTarget": "app:build:ci",
               "progress": false
+            },
+            "android": {
+              "buildTarget": "app:build:android"
+            },
+            "ios": {
+              "buildTarget": "app:build:ios"
+            },
+            "mobileweb": {
+              "buildTarget": "app:build:mobileweb"
             }
           },
           "defaultConfiguration": "development"
         },
+
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "app:build"
           }
         },
+
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -129,6 +169,7 @@
             }
           }
         },
+
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
