@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget id="io.duoc.skeletonapp" version="1.0.0"
+<widget id="io.duoc.miidentidad" version="1.0.0"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0">
 
-  <name>SkeletonApp</name>
+  <name>Mi Ideltidad</name>
   <description>
-    Mi aplicación SkeletonApp.
+    Mi aplicación Mi Identidad.
   </description>
   <author email="kat.ferreira@duocuc.cl" href="">
     Katherine Ferreira
